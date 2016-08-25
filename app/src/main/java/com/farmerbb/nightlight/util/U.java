@@ -16,6 +16,7 @@
 package com.farmerbb.nightlight.util;
 
 import android.Manifest;
+import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.AppOpsManager;
@@ -223,6 +224,21 @@ public class U {
         }
 
         editor.apply();
+
+        // Check if we need to restart the NotificationService
+        if(isNightModeOn(context) && !isServiceRunning(context)) {
+            context.startService(new Intent(context, NotificationService.class));
+        }
+    }
+
+    private static boolean isServiceRunning(Context context) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for(ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if(NotificationService.class.getName().equals(service.service.getClassName()))
+                return true;
+        }
+
+        return false;
     }
 
     public static void showPermissionDialog(final Context context) {
