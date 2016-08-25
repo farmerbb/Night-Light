@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2016 Braden Farmer
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<resources>
+
+    <string name="app_name">Night Light</string>
+
+    <string name="permission_dialog_title">Permission needed</string>
+    <string name="permission_dialog_message">Night Light requires permission to write secure settings before it can start.\n\nPlease connect your device to a computer and run the following adb shell command:\n\npm grant %1$s %2$s</string>
+    <string name="permission_dialog_message_alt">Night Light requires usage access permissions in order to blacklist specific apps.\n\nPlease press \'\'Grant Permission\'\' and ensure that Night Light is set to \'\'On\'\'</string>
+
+    <string name="error_dialog_title">Error</string>
+    <string name="error_dialog_message">Unfortunately, due to OEM restrictions, this feature can\'t be enabled on your device.\n\nYou may still be able to enable it by using this adb shell command:\n\nappops set %1$s %2$s allow</string>
+    <string name="action_ok">OK</string>
+
+    <string name="pref_title_turn_on_automatically">Turn on automatically</string>
+    <string name="pref_title_start_time">Start time</string>
+    <string name="pref_title_end_time">End time</string>
+
+    <string-array name="pref_turn_on_automatically_list">
+        <item>Never</item>
+        <item>Custom schedule</item>
+        <item>Sunset to sunrise</item>
+    </string-array>
+    <string-array name="pref_turn_on_automatically_list_values">
+        <item>never</item>
+        <item>custom_schedule</item>
+        <item>sunset_to_sunrise</item>
+    </string-array>
+
+    <string name="pref_header_general">General</string>
+    <string name="pref_header_about">About Night Light</string>
+    <string name="pref_about_description">Night Light tints your screen red at night. This makes it easier to look at your screen or read in dim light, and may help you fall asleep more easily.\n\n&#169; 2016 Braden Farmer\nInspired by the Night Light feature rumored to be present on upcoming Nexus devices\n\nClick here to check for updates or leave a rating! %1$s</string>
+
+    <string name="checking_for_superuser">Checking for superuser access&#8230; please wait.</string>
+
+    <string name="action_set">Set</string>
+    <string name="action_cancel">Cancel</string>
+
+    <string name="edit_blacklist">Edit blacklist</string>
+
+    <string name="night_light_is_active">Night Light is active</string>
+    <string name="click_to_open_settings">Click to open settings</string>
+
+    <string name="action_grant_permission">Grant permission</string>
+
+    <string name="apply_changes_title">Apply changes</string>
+    <string name="apply_changes_message">Turn Night Light %1$s?</string>
+    <string name="on">On</string>
+    <string name="off">Off</string>
+
+    <string name="blacklist_description">Night Light will not tint the screen while using blacklisted apps</string>
+
+    <string name="tasker_action_title">Select action</string>
+    <string name="tasker_condition_title">Select condition</string>
+    <string name="shortcut_label">On/Off</string>
+    <string name="tasker_on">Night Light On</string>
+    <string name="tasker_off">Night Light Off</string>
+
+    <string name="pause_30_min">Pause for 30 minutes</string>
+
+</resources>

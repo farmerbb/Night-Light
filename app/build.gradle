@@ -1,0 +1,46 @@
+apply plugin: 'android-sdk-manager'
+apply plugin: 'com.android.application'
+
+ext {
+    SUPPORT_LIBRARY_VERSION = "24.2.0"
+}
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "24.0.1"
+
+    defaultConfig {
+        applicationId "com.farmerbb.nightlight"
+        minSdkVersion 24
+        targetSdkVersion 24
+
+        versionCode 3
+        versionName "1.1"
+
+        resConfigs "en"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt')
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    compile "com.android.support:appcompat-v7:${SUPPORT_LIBRARY_VERSION}"
+    compile 'com.luckycatlabs:SunriseSunsetCalculator:1.2'
+    compile 'eu.chainfire:libsuperuser:1.0.0+'
+    compile 'joda-time:joda-time:2.9.3'
+    compile 'org.joda:joda-convert:1.3.1'
+    compile group:'com.twofortyfouram', name:'android-plugin-api-for-locale', version:'[1.0.2,2.0['
+}
+
