@@ -229,6 +229,8 @@ public class U {
         if(isNightModeOn(context) && !isServiceRunning(context)) {
             context.startService(new Intent(context, NotificationService.class));
         }
+
+        TileService.requestListeningState(context, new ComponentName(BuildConfig.APPLICATION_ID, QuickSettingsTileService.class.getName()));
     }
 
     private static boolean isServiceRunning(Context context) {
