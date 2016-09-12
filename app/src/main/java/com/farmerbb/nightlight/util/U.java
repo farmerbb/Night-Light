@@ -174,7 +174,14 @@ public class U {
         long nextEndTime = -1;
 
         SharedPreferences pref = getSharedPreferences(context);
-        if(!pref.getString("turn_on_automatically", "never").equals("never") || pref.getBoolean("is_snoozed", false)) {
+        String autoMode;
+
+        if(key != null && key.equals("turn_on_automatically"))
+            autoMode = value;
+        else
+            autoMode = pref.getString("turn_on_automatically", "never");
+
+        if(!autoMode.equals("never") || pref.getBoolean("is_snoozed", false)) {
             String[] startTime = null;
             String[] endTime = null;
             String divider = ":";
@@ -206,7 +213,7 @@ public class U {
                     .withSecondOfMinute(0)
                     .withMillisOfSecond(0);
 
-            if(pref.getString("turn_on_automatically", "never").equals("never"))
+            if(autoMode.equals("never"))
                 nextEndTime = Long.MAX_VALUE;
             else
                 nextEndTime = endTimeCalendar.isBefore(now)
