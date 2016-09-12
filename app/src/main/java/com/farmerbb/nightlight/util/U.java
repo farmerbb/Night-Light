@@ -45,6 +45,7 @@ import com.farmerbb.nightlight.service.QuickSettingsTileService;
 import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -77,7 +78,7 @@ public class U {
     }
 
     public static void setNightMode(Context context, int nightModeValue) {
-        SharedPreferences pref = U.getSharedPreferences(context);
+        SharedPreferences pref = getSharedPreferences(context);
         pref.edit().remove("is_snoozed").apply();
 
         try {
@@ -112,12 +113,11 @@ public class U {
         String[] latLong = getLatLong(context);
 
         if(latLong != null) {
-            com.luckycatlabs.sunrisesunset.dto.Location location = new com.luckycatlabs.sunrisesunset.dto.Location(latLong[0], latLong[1]);
-            SunriseSunsetCalculator calculator = new SunriseSunsetCalculator(location, TimeZone.getDefault().getID());
-
             SharedPreferences pref = getSharedPreferences(context);
-            SharedPreferences.Editor editor = pref.edit();
+            com.luckycatlabs.sunrisesunset.dto.Location location = new com.luckycatlabs.sunrisesunset.dto.Location(latLong[0], latLong[1]);
+            SunriseSunsetCalculator calculator = new SunriseSunsetCalculator(location, pref.getString("time_zone", TimeZone.getDefault().getID()));
 
+            SharedPreferences.Editor editor = pref.edit();
             editor.putString("start_time", calculator.getOfficialSunsetForDate(Calendar.getInstance()));
             editor.putString("end_time", calculator.getOfficialSunriseForDate(Calendar.getInstance()));
 
@@ -153,14 +153,22 @@ public class U {
     }
 
     public static void registerNextReceiver(Context context) {
+        registerNextReceiver(context, DateTime.now());
+    }
+
+    private static void registerNextReceiver(Context context, DateTime now) {
         SharedPreferences pref = getSharedPreferences(context);
         if(pref.getString("turn_on_automatically", "never").equals("sunset_to_sunrise"))
             refreshSunriseSunsetTime(context);
 
-        registerNextReceiver(context, null, null);
+        registerNextReceiver(context, null, null, now);
     }
 
     public static void registerNextReceiver(Context context, String key, String value) {
+        registerNextReceiver(context, key, value, DateTime.now());
+    }
+
+    private static void registerNextReceiver(Context context, String key, String value, DateTime now) {
         Intent broadcastIntent = new Intent(context, NightLightReceiver.class);
         long nextStartTime = -1;
         long nextEndTime = -1;
@@ -182,18 +190,18 @@ public class U {
             if(startTime == null) startTime = pref.getString("start_time", "20:00").split(divider);
             if(endTime == null) endTime = pref.getString("end_time", "06:00").split(divider);
 
-            DateTime startTimeCalendar = DateTime.now()
-                    .withHourOfDay(Integer.parseInt(startTime[0]))
+            DateTime startTimeCalendar =
+                    now.withHourOfDay(Integer.parseInt(startTime[0]))
                     .withMinuteOfHour(Integer.parseInt(startTime[1]))
                     .withSecondOfMinute(0)
                     .withMillisOfSecond(0);
 
-            nextStartTime = startTimeCalendar.isBeforeNow()
+            nextStartTime = startTimeCalendar.isBefore(now)
                     ? startTimeCalendar.plusDays(1).getMillis()
                     : startTimeCalendar.getMillis();
 
-            DateTime endTimeCalendar = DateTime.now()
-                    .withHourOfDay(Integer.parseInt(endTime[0]))
+            DateTime endTimeCalendar =
+                    now.withHourOfDay(Integer.parseInt(endTime[0]))
                     .withMinuteOfHour(Integer.parseInt(endTime[1]))
                     .withSecondOfMinute(0)
                     .withMillisOfSecond(0);
@@ -201,7 +209,7 @@ public class U {
             if(pref.getString("turn_on_automatically", "never").equals("never"))
                 nextEndTime = Long.MAX_VALUE;
             else
-                nextEndTime = endTimeCalendar.isBeforeNow()
+                nextEndTime = endTimeCalendar.isBefore(now)
                         ? endTimeCalendar.plusDays(1).getMillis()
                         : endTimeCalendar.getMillis();
 
@@ -217,10 +225,12 @@ public class U {
             manager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, nextStartTime < nextEndTime ? nextStartTime : nextEndTime, pendingIntent);
             editor.putLong("next_start_time", nextStartTime);
             editor.putLong("next_end_time", nextEndTime);
+            editor.putString("time_zone", TimeZone.getDefault().getID());
         } else {
             manager.cancel(pendingIntent);
             editor.remove("next_start_time");
             editor.remove("next_end_time");
+            editor.remove("time_zone");
         }
 
         editor.apply();
@@ -253,7 +263,7 @@ public class U {
                         try {
                             context.startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
                         } catch (ActivityNotFoundException e) {
-                            U.showErrorDialog(context, "GET_USAGE_STATS");
+                            showErrorDialog(context, "GET_USAGE_STATS");
                         }
                     }
                 });
@@ -297,5 +307,30 @@ public class U {
         return applicationInfo != null
                 && appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, applicationInfo.uid, applicationInfo.packageName)
                 == AppOpsManager.MODE_ALLOWED;
+    }
+    
+    public static void resyncNightLight(Context context, LocalDateTime localDateTime, int offset) {
+        DateTime now = localDateTime == null ? DateTime.now() : localDateTime.toDateTime();
+
+        SharedPreferences pref = getSharedPreferences(context);
+        if(pref.contains("next_start_time") && pref.contains("next_end_time")) {
+            DateTime startTimeCalendar = new DateTime(pref.getLong("next_start_time", -1)).minus(offset);
+            DateTime endTimeCalendar = new DateTime(pref.getLong("next_end_time", -1)).minus(offset);
+
+            if(startTimeCalendar.isBefore(now) && endTimeCalendar.isBefore(now)) {
+                while(startTimeCalendar.isBefore(now) && endTimeCalendar.isBefore(now)) {
+                    startTimeCalendar = startTimeCalendar.plusDays(1);
+                    endTimeCalendar = endTimeCalendar.plusDays(1);
+                }
+            }
+
+            if(startTimeCalendar.isBefore(now) && endTimeCalendar.isAfter(now)) {
+                setNightMode(context, true);
+            } else if(startTimeCalendar.isAfter(now) && endTimeCalendar.isBefore(now)) {
+                setNightMode(context, false);
+            }
+        }
+
+        registerNextReceiver(context, now);
     }
 }

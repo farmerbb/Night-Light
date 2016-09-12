@@ -98,7 +98,7 @@ public class NotificationService extends Service {
     }
 
     private void updateRecentApps() {
-        Blacklist pba = Blacklist.getInstance(this);
+        Blacklist blacklist = Blacklist.getInstance(this);
         String currentForegroundApp = null;
 
         if(!U.isNightModeOn(this))
@@ -106,7 +106,7 @@ public class NotificationService extends Service {
         else if(Settings.Secure.getInt(getContentResolver(), "accessibility_display_inversion_enabled", 0) == 1)
             U.setTint(this, false);
         else {
-            if(pba.getBlockedApps().size() > 0) {
+            if(blacklist.getBlockedApps().size() > 0) {
                 UsageStatsManager mUsageStatsManager = (UsageStatsManager) getSystemService(Context.USAGE_STATS_SERVICE);
                 UsageEvents events = mUsageStatsManager.queryEvents(
                         System.currentTimeMillis() - AlarmManager.INTERVAL_DAY,
@@ -123,7 +123,7 @@ public class NotificationService extends Service {
             }
 
 
-            U.setTint(this, !pba.isBlocked(currentForegroundApp));
+            U.setTint(this, !blacklist.isBlocked(currentForegroundApp));
         }
     }
 

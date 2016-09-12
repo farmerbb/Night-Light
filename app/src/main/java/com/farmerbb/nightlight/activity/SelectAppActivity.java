@@ -53,6 +53,7 @@ public class SelectAppActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.select_app);
+        setFinishOnTouchOutside(false);
         setTitle(getString(R.string.edit_blacklist));
 
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
