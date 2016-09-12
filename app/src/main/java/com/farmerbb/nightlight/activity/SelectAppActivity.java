@@ -15,13 +15,14 @@
 
 package com.farmerbb.nightlight.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,11 +43,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class SelectAppActivity extends Activity {
+public class SelectAppActivity extends AppCompatActivity {
 
     private AppListGenerator appListGenerator;
     private ProgressBar progressBar;
     private ListView appList;
+
+    static { AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO); }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

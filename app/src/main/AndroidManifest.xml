@@ -56,7 +56,7 @@
         </activity>
         <activity
             android:name=".activity.SelectAppActivity"
-            android:theme="@android:style/Theme.Material.Light.Dialog" />
+            android:theme="@style/AppTheme.Dialog" />
         <activity
             android:name=".activity.TaskerActionActivity"
             android:documentLaunchMode="always"
