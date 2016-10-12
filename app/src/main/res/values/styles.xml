@@ -28,4 +28,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="AppTheme.Dialog.Alt" parent="AppTheme.Dialog" >
+        <item name="windowNoTitle">true</item>
+    </style>
+
 </resources>

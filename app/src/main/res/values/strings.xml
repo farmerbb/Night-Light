@@ -43,7 +43,7 @@
 
     <string name="pref_header_general">General</string>
     <string name="pref_header_about">About Night Light</string>
-    <string name="pref_about_description">Night Light tints your screen red at night. This makes it easier to look at your screen or read in dim light, and may help you fall asleep more easily.\n\n&#169; 2016 Braden Farmer\nInspired by the Night Light feature rumored to be present on upcoming Nexus devices\n\nClick here to check for updates or leave a rating! %1$s</string>
+    <string name="pref_about_description">Night Light tints your screen red at night. This makes it easier to look at your screen or read in dim light, and may help you fall asleep more easily.\n\n&#169; 2016 Braden Farmer\n\nClick here to check for updates or leave a rating! %1$s</string>
 
     <string name="checking_for_superuser">Checking for superuser access&#8230; please wait.</string>
 
@@ -71,5 +71,12 @@
     <string name="tasker_off">Night Light Off</string>
 
     <string name="pause_30_min">Pause for 30 minutes</string>
+
+    <string name="uninstall_notification_text">Important info about Night Light and Android 7.1</string>
+    <string name="uninstall_dialog_title">Android 7.1 and Night Light</string>
+    <string name="uninstall_dialog_text">Google has included the Night Light feature as part of the Android 7.1 update.  It is recommended that you uninstall the Night Light app and use the built-in feature instead.\n\nKeeping this app installed may interfere with the built-in Night Light feature, or may stop working altogether.\n\nYou can access the built-in Night Light feature via Settings > Display.</string>
+
+    <string name="action_uninstall">Uninstall</string>
+    <string name="action_dont_show_again">Don\'t show again</string>
 
 </resources>

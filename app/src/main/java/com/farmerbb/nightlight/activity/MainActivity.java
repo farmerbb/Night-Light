@@ -26,8 +26,10 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -173,6 +175,8 @@ public class MainActivity extends AppCompatActivity {
 
         if(checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
             requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 42);
+        else if(Build.VERSION.SDK_INT > Build.VERSION_CODES.N && !pref.getBoolean("dont_show_uninstall_dialog", false))
+            startActivity(new Intent(this, UninstallNotificationActivity.class));
 
         if(pref.getString("start_time", "99:99").equals("99:99"))
             pref.edit().putString("start_time", "20:00").apply();
@@ -188,6 +192,15 @@ public class MainActivity extends AppCompatActivity {
                 LocalBroadcastManager.getInstance(MainActivity.this).registerReceiver(showDialogReceiver, new IntentFilter("com.farmerbb.nightlight.SHOW_DIALOG"));
             }
         }, 100);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
+            SharedPreferences pref = U.getSharedPreferences(this);
+            if(!pref.getBoolean("dont_show_uninstall_dialog", false))
+                startActivity(new Intent(this, UninstallNotificationActivity.class));
+        }
     }
 
     private void updateSwitch() {
