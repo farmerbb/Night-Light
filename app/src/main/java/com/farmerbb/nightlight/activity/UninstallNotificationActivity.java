@@ -58,6 +58,7 @@ public class UninstallNotificationActivity extends AppCompatActivity {
                         startActivity(new Intent(Intent.ACTION_DELETE, Uri.parse("package:" + BuildConfig.APPLICATION_ID)));
 
                         pref.edit().putBoolean("uninstall_dialog_shown", true).apply();
+                        U.setNightMode(UninstallNotificationActivity.this, false);
                         finish();
                     }
                 });
