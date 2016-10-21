@@ -74,7 +74,7 @@
 
     <string name="uninstall_notification_text">Important info about Night Light and Android 7.1</string>
     <string name="uninstall_dialog_title">Android 7.1 and Night Light</string>
-    <string name="uninstall_dialog_text">Google has included the Night Light feature as part of the Android 7.1 update.  It is recommended that you uninstall the Night Light app and use the built-in feature instead.\n\nKeeping this app installed may interfere with the built-in Night Light feature, or may stop working altogether.\n\nYou can access the built-in Night Light feature via Settings > Display.</string>
+    <string name="uninstall_dialog_text">Google has removed the night mode feature as part of the Android 7.1 update.  It is recommended that you uninstall this app and use an alternative solution instead.\n\nThis app will not be updated again, unless a solution is found for enabling night mode on Android 7.1.\n\nThank you for using Night Light for Android Nougat!</string>
 
     <string name="action_uninstall">Uninstall</string>
     <string name="action_dont_show_again">Don\'t show again</string>
